@@ -64,8 +64,7 @@ void setup() {
   display.display();
   encoderEnable ();
   // setupMotor();
-  setupSound ();
-
+  //setupSound ();
 
 
   /*
@@ -89,7 +88,7 @@ void setup() {
   backLight (true);
   for (int i = 200; i < 1000; i += 100) {
     led (i % 3, true);
-    tone (i, 50);
+   // tone (i, 50);
     led (i % 3, false);
   }
   //. backLight (false);
@@ -110,7 +109,7 @@ void loop() {
 
  
   led (ledCounter, true);
-  tone (ledCounter*500, 50);
+ // tone (ledCounter*500, 50);
   delay (500);
   led (ledCounter, false);
   
