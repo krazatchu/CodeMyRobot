@@ -24,8 +24,7 @@ String output27State = "off";
 const int output26 = 2;
 const int output27 = 4;
 
-void setup() {
-  Serial.begin(115200);
+void setupWifi() {
   // Initialize the output variables as outputs
   pinMode(output26, OUTPUT);
   pinMode(output27, OUTPUT);
@@ -45,7 +44,8 @@ void setup() {
   server.begin();
 }
 
-void loop(){
+
+void drawServerPage(){
   WiFiClient client = server.available();   // Listen for incoming clients
 
   if (client) {                             // If a new client connects,

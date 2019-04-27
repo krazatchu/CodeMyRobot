@@ -65,8 +65,8 @@ void setup() {
   display.display();
   encoderEnable ();
   // setupMotor();
-  setupSound ();
-
+  setupSound();
+  setupWifi();
 
 
   /*
@@ -124,6 +124,7 @@ void loop() {
   ledCounter ++;
   if (ledCounter > 3) ledCounter = 1;
   
+  drawServerPage();
   
   /*
     if (PCFInterruptFlagOne) {
