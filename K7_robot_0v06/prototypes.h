@@ -11,9 +11,9 @@ void goBackward(void);
 
 void setupSound(void);
 void setupWifi(void);
-void tone(uint16_t , uint16_t);
-
-void drawServerPage(void);
+void tone(float , float);
 
 void backLight(bool);
 void led(uint8_t, bool);
+
+void playTetris(void);
