@@ -13,9 +13,9 @@ PCF857x expanderTwo(0x20, &Wire);
 PCF857x expanderOne(0x21, &Wire);
 Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) // (D/C) // (RST) on IO EXPANDER
 
+
 extern volatile long CommandedPositionLeft;
 extern volatile long CommandedPositionRight;
-
 
 
 volatile bool PCFInterruptFlagTwo = false;
@@ -64,8 +64,10 @@ void setup() {
   display.fillRect(26, 10, 20, 5, BLACK);
   display.display();
   encoderEnable ();
+
   // setupMotor();
   //setupSound ();
+   setupLidar();
 
 
   /*
@@ -99,6 +101,7 @@ void setup() {
 
 
 uint8_t ledCounter = 1;
+uint16_t range = 0;
 
 void loop() {
 
@@ -108,6 +111,8 @@ void loop() {
   //CommandedPositionRight++;
   //CommandedPositionLeft++;
 
+  range = getMeasurement();
+  Serial.println(range);
  
   led (ledCounter, true);
   //tone (ledCounter*500, 50);

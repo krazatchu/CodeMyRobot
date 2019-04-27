@@ -15,3 +15,6 @@ void tone( uint16_t , uint16_t );
 
 void backLight (bool);
 void led (uint8_t, bool);
+
+void setupLidar(void);
+uint16_t getMeasurement(void);
