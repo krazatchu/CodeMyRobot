@@ -8,6 +8,7 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
 
+
 PCF857x expanderTwo(0x20, &Wire);
 PCF857x expanderOne(0x21, &Wire);
 Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) // (D/C) // (RST) on IO EXPANDER
@@ -15,7 +16,8 @@ Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) 
 extern volatile long CommandedPositionLeft;
 extern volatile long CommandedPositionRight;
 
-
+volatile bool startupSound = true;
+volatile bool loopSound = false;
 
 volatile bool PCFInterruptFlagTwo = false;
 void ICACHE_RAM_ATTR PCFInterruptTwo() {
@@ -63,7 +65,7 @@ void setup() {
   display.fillCircle(60, 30, 10, BLACK);
   display.display();
   encoderEnable ();
-//   setupMotor();
+  // setupMotor();
   setupSound ();
 
   // Setup Ultra sound sensor
@@ -91,7 +93,10 @@ void setup() {
   backLight (true);
   for (int i = 200; i < 1000; i += 100) {
     led (i % 3, true);
-//    tone (i, 50);
+   
+    if (startupSound == true)
+      tone (i, 50);
+
     led (i % 3, false);
   }
   //. backLight (false);
@@ -113,7 +118,10 @@ void loop() {
 
  
   led (ledCounter, true);
-//  tone (ledCounter*500, 50);
+
+  if (loopSound == true)
+    tone (ledCounter*500, 50);
+  
   delay (500);
   led (ledCounter, false);
   
