@@ -63,6 +63,7 @@ void setup() {
   encoderEnable ();
 //   setupMotor();
   setupSound ();
+  setupWifi();
 
   // Setup Ultra sound sensor
   setupUltrasound(trigPin, echoPin);
