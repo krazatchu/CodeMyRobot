@@ -120,7 +120,7 @@ void loop() {
   if (ledCounter > 3) ledCounter = 1;
   
   // loop () of Ultra sound sensor
-  loopUltrasound(trigPin, echoPin)
+  loopUltrasound(trigPin, echoPin);
   
   /*
     if (PCFInterruptFlagOne) {
