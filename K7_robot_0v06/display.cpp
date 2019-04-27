@@ -13,10 +13,18 @@ void display_init(uint8_t contrast) {
 }
 
 /* Quick way to print a line of text. */
-void display_print(const char *text, uint8_t x, uint8_t y, uint8_t size) {
+void display_text(const char *text, uint8_t x, uint8_t y, uint8_t size) {
   display.setTextSize(size);
   display.setCursor(x, y);
   display.print(text);
+  display.display();
+}
+
+/* Quick way to print an int. */
+void display_int(int integer, uint8_t x, uint8_t y, uint8_t size) {
+  display.setTextSize(size);
+  display.setCursor(x, y);
+  display.print(integer);
   display.display();
 }
 
