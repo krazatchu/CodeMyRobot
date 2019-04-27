@@ -23,4 +23,8 @@ void led (uint8_t, bool);
 void setupUltrasound(uint8_t, uint8_t);
 unsigned char loopUltrasound(uint8_t, uint8_t);
 
+// Display function
+void setupExpression(void)
+void eyeblink(void)
+
 #endif
