@@ -8,7 +8,6 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
 
-
 PCF857x expanderTwo(0x20, &Wire);
 PCF857x expanderOne(0x21, &Wire);
 Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) // (D/C) // (RST) on IO EXPANDER
@@ -58,14 +57,17 @@ void setup() {
   display.setContrast(60);
   display.clearDisplayRAM();
   display.clearDisplay();
+  display.setRotation(2);
   delay (100);
   display.fillCircle(24, 30, 10, BLACK);
   display.fillCircle(60, 30, 10, BLACK);
   display.display();
   encoderEnable ();
-  // setupMotor();
+//   setupMotor();
   setupSound ();
 
+  // Setup Ultra sound sensor
+  setupUltrasound(trigPin, echoPin);
 
 
   /*
@@ -89,7 +91,7 @@ void setup() {
   backLight (true);
   for (int i = 200; i < 1000; i += 100) {
     led (i % 3, true);
-    tone (i, 50);
+//    tone (i, 50);
     led (i % 3, false);
   }
   //. backLight (false);
@@ -97,7 +99,8 @@ void setup() {
 
 }
 
-
+// 1 --- is red
+// 2 --- is green
 uint8_t ledCounter = 1;
 
 void loop() {
@@ -110,13 +113,15 @@ void loop() {
 
  
   led (ledCounter, true);
-  tone (ledCounter*500, 50);
+//  tone (ledCounter*500, 50);
   delay (500);
   led (ledCounter, false);
   
   ledCounter ++;
   if (ledCounter > 3) ledCounter = 1;
   
+  // loop () of Ultra sound sensor
+  loopUltrasound(trigPin, echoPin)
   
   /*
     if (PCFInterruptFlagOne) {
