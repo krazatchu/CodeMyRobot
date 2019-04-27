@@ -59,6 +59,7 @@ void setup() {
   display.setContrast(60);
   display.clearDisplayRAM();
   display.clearDisplay();
+  display.setRotation(2);
   delay (100);
   display.fillCircle(24, 30, 10, BLACK);
   display.fillCircle(60, 30, 10, BLACK);
@@ -67,6 +68,8 @@ void setup() {
   // setupMotor();
   setupSound ();
 
+  // Setup Ultra sound sensor
+  setupUltrasound(trigPin, echoPin);
 
 
   /*
@@ -101,7 +104,8 @@ void setup() {
 
 }
 
-
+// 1 --- is red
+// 2 --- is green
 uint8_t ledCounter = 1;
 
 void loop() {
@@ -124,6 +128,8 @@ void loop() {
   ledCounter ++;
   if (ledCounter > 3) ledCounter = 1;
   
+  // loop () of Ultra sound sensor
+  loopUltrasound(trigPin, echoPin)
   
   /*
     if (PCFInterruptFlagOne) {
