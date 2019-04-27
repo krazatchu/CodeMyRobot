@@ -7,8 +7,8 @@
 
 #define motorRightOne 23
 #define motorRightTwo 19
-#define motorLeftOne 2  
-#define motorLeftTwo 4 
+#define motorLeftOne 4  
+#define motorLeftTwo 2 
 
 #define spkr 25
 

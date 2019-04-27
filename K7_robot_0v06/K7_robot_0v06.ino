@@ -8,7 +8,6 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
 
-
 PCF857x expanderTwo(0x20, &Wire);
 PCF857x expanderOne(0x21, &Wire);
 Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) // (D/C) // (RST) on IO EXPANDER
@@ -16,7 +15,7 @@ Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) 
 extern volatile long CommandedPositionLeft;
 extern volatile long CommandedPositionRight;
 
-volatile bool startupSound = true;
+volatile bool startupSound = false;
 volatile bool loopSound = false;
 
 volatile bool PCFInterruptFlagTwo = false;
@@ -44,7 +43,7 @@ void setup() {
 
   Wire.begin(21, 22);
   Wire.setClock(100000L);
-
+  
   expanderTwo.begin();
   pinMode(32, INPUT_PULLUP);
   expanderTwo.resetInterruptPin();
@@ -58,19 +57,13 @@ void setup() {
   display.begin();
   display.setContrast(60);
   display.clearDisplayRAM();
-  display.clearDisplay();
-  delay (100);
-  display.fillCircle(24, 30, 10, BLACK);
-  display.fillCircle(60, 30, 10, BLACK);
-  display.display();
+  setupExpression();
   encoderEnable ();
-  // setupMotor();
+ // setupMotor();
   setupSound ();
 
-
-
-  /*
-    goSpin ();
+  
+/*    goSpin ();
     delay (5000);
     goStop();
     delay(500);
@@ -78,11 +71,11 @@ void setup() {
     delay(1000);
     goStop();
 
-    display.setTextSize(1);
+    display.setTextSize(2);
     display.setTextColor(BLACK);
     display.clearDisplay();
     display.setCursor(0, 0);
-    display.println(i);
+    display.println("Hello!");
     display.display();
 
   */
@@ -90,53 +83,53 @@ void setup() {
   backLight (true);
   for (int i = 200; i < 1000; i += 100) {
     led (i % 3, true);
-   
+
     if (startupSound == true)
       tone (i, 50);
-
+      
     led (i % 3, false);
   }
-  //. backLight (false);
+  backLight (false);
 
 
 }
 
 
 uint8_t ledCounter = 1;
-
 void loop() {
 
- //handleInt ();
+ 
+  handleInt();
   checkMotorFault ();
 
   //CommandedPositionRight++;
   //CommandedPositionLeft++;
-
  
   led (ledCounter, true);
 
   if (loopSound == true)
     tone (ledCounter*500, 50);
-  
+    
   delay (500);
   led (ledCounter, false);
   
   ledCounter ++;
   if (ledCounter > 3) ledCounter = 1;
   
+  eyeblink();
+  delay(5000);
   
-  /*
-    if (PCFInterruptFlagOne) {
+ /*   if (PCFInterruptFlagOne) {
 
-      Serial.println("Got an interrupt: ");
+      display.println("Got an interrupt: ");
       expanderTwo.write(7, expanderOne.read(3)); // 3 is button right
       expanderTwo.write(6, expanderOne.read(2)); // 2 is button left
       PCFInterruptFlagOne = false;
     }
 
     if (PCFInterruptFlagTwo) {
-      Serial.println("Got an interrupt: ");
-      if (expanderTwo.read(3) == HIGH) Serial.println("Pin 3 is HIGH!");
+      display.println("Got an interrupt: ");
+      if (expanderTwo.read(3) == HIGH) display.println("Pin 3 is HIGH!");
       else Serial.println("Pin 3 is LOW!");
       // DO NOTE: When you write LOW to a pin on a PCF8574 it becomes an OUTPUT.
       // It wouldn't generate an interrupt if you were to connect a button to it that pulls it HIGH when you press the button.
@@ -159,4 +152,37 @@ void loop() {
     expanderTwo.write(4, LOW); // lcd back
     delay(1000);
   */
+}
+/*Default expression: two filled circle eyes and a smiling mouth*/
+void setupExpression(void){
+  display.clearDisplay();
+  display.setRotation(0);
+  delay (100);
+  display.fillCircle(24, 30, 8, BLACK);
+  display.fillCircle(60, 30, 8, BLACK);
+  
+  display.setCursor(30,32);
+  display.setTextSize(2);
+  display.setRotation(1);
+  display.print(")");
+  display.display();
+}
+
+/*Eye blinks for 500 ms and then back to default expression*/
+void eyeblink(void){
+  display.setRotation(0);
+  display.clearDisplay();
+
+  display.drawLine(18,31,30,30,BLACK);
+  display.drawLine(54,30,64,31,BLACK);
+
+  display.setCursor(30,32);
+  display.setTextSize(2);
+  display.setRotation(1);
+  display.print(")");
+  display.display();
+
+  delay(500);
+
+  setupExpression();
 }
