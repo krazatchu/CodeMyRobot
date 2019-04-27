@@ -1,4 +1,4 @@
-//  KARL 7 ROBOT
+//  CARL 7 ROBOT
 
 #include  "pins.h"
 #include  "prototypes.h"
@@ -7,6 +7,7 @@
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
+#include "../K7_robot_0v06/display.h"
 
 
 PCF857x expanderTwo(0x20, &Wire);
@@ -54,8 +55,6 @@ void setup() {
   expanderOne.resetInterruptPin();
   attachInterrupt(digitalPinToInterrupt(35), PCFInterruptOne, FALLING);
 
-
-  
   display.begin();
   display.setContrast(60);
   display.clearDisplayRAM();
@@ -65,49 +64,64 @@ void setup() {
   display.fillCircle(60, 30, 10, BLACK);
   display.fillRect(26, 10, 20, 5, BLACK);
   display.display();
+  display.clearDisplay();
   encoderEnable ();
 
   // setupMotor();
   setupSound ();
-   setupLidar();
-
-
-  /*
-    goSpin ();
-    delay (5000);
-    goStop();
-    delay(500);
-    goForward();
-    delay(1000);
-    goStop();
-
-    display.setTextSize(1);
-    display.setTextColor(BLACK);
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.println(i);
-    display.display();
-
-  */
+  setupLidar();
 
   backLight (true);
-  for (int i = 200; i < 1000; i += 100) {
-    led (i % 3, true);
-   // tone (i, 50);
-    led (i % 3, false);
-  }
   //. backLight (false);
 }
 
-
 uint8_t ledCounter = 1;
 uint16_t range = 0;
+
+/*
+ * Displays the range on the screen. 
+ */
+void displayRange(uint16_t range){
+   display.clearDisplay();
+   display.setRotation(2);
+   display.setCursor(0, 0);
+   display.setTextSize(3);
+   display.println(range);
+   display.display();
+}
+
+/**
+ * Displays a string on the screen.
+ */
+void displayString(String string){
+   display.clearDisplay();
+   display.setRotation(2);
+   display.setCursor(0, 0);
+   display.setTextSize(2);
+   display.println(string);
+   display.display();
+}
+
+/**
+ * Checks if the range is too close.
+ */
+boolean tooClose(uint16_t range){
+  if(range<50){
+    return true;
+  }else{
+    return false;  
+  }
+  
+}
 
 void loop() {
   Serial.println(expanderTwo.read(2));
   range = getMeasurement();
   Serial.println(range);
- 
-  tone (500, range);
+  displayRange(range);
+  //tone (50, range);
+  if(tooClose(range)){
+    displayString("Too Close");  
+  }
   
 }
