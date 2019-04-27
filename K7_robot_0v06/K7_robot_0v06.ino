@@ -7,6 +7,7 @@
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
+#include "display.h"
 
 
 PCF857x expanderTwo(0x20, &Wire);
@@ -54,13 +55,9 @@ void setup() {
   expanderOne.resetInterruptPin();
   attachInterrupt(digitalPinToInterrupt(35), PCFInterruptOne, FALLING);
 
-  display.begin();
-  display.setContrast(60);
-  display.clearDisplayRAM();
-  
-  // Calling display function
-  setupExpression();
- 
+  display_init(60);
+  display_smiling_face();
+
   encoderEnable ();
 //   setupMotor();
   setupSound ();
@@ -156,38 +153,4 @@ void loop() {
     expanderTwo.write(4, LOW); // lcd back
     delay(1000);
   */
-}
-
-/*Default expression: two filled circle eyes and a smiling mouth*/
-void setupExpression(void){
- display.clearDisplay();
- display.setRotation(0);
- delay (100);
- display.fillCircle(24, 30, 8, BLACK);
- display.fillCircle(60, 30, 8, BLACK);
-
- display.setCursor(30,32);
- display.setTextSize(2);
- display.setRotation(1);
- display.print(")");
- display.display();
-}
-
-/*Eye blinks for 500 ms and then back to default expression*/
-void eyeblink(void){
- display.setRotation(0);
- display.clearDisplay();
-
- display.drawLine(18,31,30,30,BLACK);
- display.drawLine(54,30,64,31,BLACK);
-
- display.setCursor(30,32);
- display.setTextSize(2);
- display.setRotation(1);
- display.print(")");
- display.display();
-
- delay(500);
-
- setupExpression();
 }
