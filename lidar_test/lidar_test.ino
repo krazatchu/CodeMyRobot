@@ -7,8 +7,6 @@
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
-#include "../K7_robot_0v06/display.h"
-
 
 PCF857x expanderTwo(0x20, &Wire);
 PCF857x expanderOne(0x21, &Wire);
