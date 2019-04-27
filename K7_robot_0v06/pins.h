@@ -1,3 +1,5 @@
+#ifndef PINS_H_
+#define PINS_H_
 
 #define encoderRightA 16
 #define encoderRightB 18
@@ -12,7 +14,13 @@
 
 #define spkr 25
 
-#define redLed    7
-#define greenLed  6
-#define blueLed   5
+#define redLed    6
+#define greenLed  5
+#define blueLed   7
 #define lcdLed    4
+
+// Ultra Sound Sensor pins
+#define trigPin 15
+#define echoPin 27
+
+#endif

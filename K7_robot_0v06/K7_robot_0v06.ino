@@ -8,6 +8,7 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
 
+
 PCF857x expanderTwo(0x20, &Wire);
 PCF857x expanderOne(0x21, &Wire);
 Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) // (D/C) // (RST) on IO EXPANDER
@@ -76,12 +77,14 @@ void setup() {
     goForward();
     delay(1000);
     goStop();
+
     display.setTextSize(1);
     display.setTextColor(BLACK);
     display.clearDisplay();
     display.setCursor(0, 0);
     display.println(i);
     display.display();
+
   */
 
   backLight (true);
@@ -121,11 +124,13 @@ void loop() {
   
   /*
     if (PCFInterruptFlagOne) {
+
       Serial.println("Got an interrupt: ");
       expanderTwo.write(7, expanderOne.read(3)); // 3 is button right
       expanderTwo.write(6, expanderOne.read(2)); // 2 is button left
       PCFInterruptFlagOne = false;
     }
+
     if (PCFInterruptFlagTwo) {
       Serial.println("Got an interrupt: ");
       if (expanderTwo.read(3) == HIGH) Serial.println("Pin 3 is HIGH!");
@@ -139,6 +144,7 @@ void loop() {
     Serial.println("Blink.");
     // if(digitalRead(2)==HIGH) digitalWrite(2, LOW);
     // else digitalWrite(2, HIGH);
+
     //expanderTwo.write(7, HIGH); // red
     //expanderTwo.write(6, HIGH); // green
     // expanderTwo.write(5, HIGH); // blue
