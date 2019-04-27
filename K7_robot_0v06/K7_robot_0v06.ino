@@ -61,6 +61,7 @@ void setup() {
   delay (100);
   display.fillCircle(24, 30, 10, BLACK);
   display.fillCircle(60, 30, 10, BLACK);
+  display.fillRect(26, 10, 20, 5, BLACK);
   display.display();
   encoderEnable ();
   // setupMotor();
@@ -109,7 +110,7 @@ void loop() {
 
  
   led (ledCounter, true);
- // tone (ledCounter*500, 50);
+  //tone (ledCounter*500, 50);
   delay (500);
   led (ledCounter, false);
   
