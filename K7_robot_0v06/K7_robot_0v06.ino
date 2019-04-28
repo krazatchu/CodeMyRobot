@@ -115,16 +115,7 @@ void loop() {
 
   //handleInt ();
   checkMotorFault ();
-  //motionHandler ();
-
-  // CommandedPositionRight++;
-  // CommandedPositionLeft++;
-  // delay (50);
-
-  // led (ledCounter, true);
-  // tone (ledCounter*500, 50);
-  // delay (500);
-  // led (ledCounter, false);
+  motionHandler ();
 
   //loopUltrasound(trigPin, echoPin);
   // loop () of Ultra sound sensor

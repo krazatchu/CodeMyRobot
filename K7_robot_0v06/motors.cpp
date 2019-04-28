@@ -9,14 +9,14 @@
 #define M_left_PWM_CHANNEL_two   14
 #define M_right_PWM_CHANNEL_two  15
 
-uint8_t motorRightOne = 2;
-uint8_t motorRightTwo = 4;
-uint8_t motorLeftOne = 23;
-uint8_t motorLeftTwo = 19;
+uint8_t motorRightOne = 19;
+uint8_t motorRightTwo = 23;
+uint8_t motorLeftOne = 4;
+uint8_t motorLeftTwo = 2;
 /*
 uint8_t motorRightOne = 2;
 uint8_t motorRightTwo = 4;
-uint8_t motorLeftOne = 23 ;
+uint8_t motorLeftOne = 23;
 uint8_t motorLeftTwo = 19;
 */
 extern PCF857x expanderOne;
@@ -128,6 +128,10 @@ void pwm_setup()
 void testMotorDirection()
 {
   uint8_t counter = 0;
+  uint8_t oldMotorLeftOne;
+  uint8_t oldMotorLeftTwo;
+  uint8_t oldMotorRightOne;
+  uint8_t oldMotorRightTwo;
 
   pwm_setup();
   
@@ -161,30 +165,34 @@ void testMotorDirection()
   // Adjust pins based on information recevied
   if (CurrentPositionLeft <= -16)
   {
-    motorLeftOne = 23;
-    motorLeftTwo = 19;
+    oldMotorLeftOne = motorLeftOne;
+    oldMotorLeftTwo = motorLeftTwo;
+    motorLeftOne = oldMotorLeftTwo;
+    motorLeftTwo = oldMotorLeftOne;
     Serial.printf("Left motor direction was wrong, corrected to pin 1=%d, pin 2=%d\r\n", motorLeftOne, motorLeftTwo);
   }
   if ((CurrentPositionRight >= 16) || (CurrentPositionRight <= -16))
   {
     Serial.println("Whoops, tested right accidentally");
     // Pins assigned to left actually controls right motor
+    oldMotorRightOne = motorRightOne;
+    oldMotorRightTwo = motorRightTwo;
     if (CurrentPositionRight >= 16)
     {
-      Serial.println("Right motor direction was correct");
-      motorRightOne = 23;
-      motorRightOne = 19;
+      motorRightOne = motorLeftOne;
+      motorRightTwo = motorLeftTwo;
+      Serial.println("Right motor direction was correct");      
     }
     if (CurrentPositionRight <= -16)
-    {
-      motorRightOne = 19;
-      motorRightOne = 23;
-      Serial.printf("Right motor direction was wrong, corrected to pin 1=%d, pin 2=%d\r\n", motorLeftOne, motorLeftTwo);
+    { 
+      motorRightOne = motorLeftTwo;
+      motorRightTwo = motorLeftOne;
+      Serial.printf("Right motor direction was wrong, corrected to pin 1=%d, pin 2=%d\r\n", motorRightOne, motorRightTwo);
     }
 
-    motorLeftOne = 2;
-    motorLeftTwo = 4;
-    // Test the adjusted left motor
+    // Test the corrected left motor
+    motorLeftOne = oldMotorRightOne;
+    motorLeftTwo = oldMotorRightTwo;
 
     pwm_setup();
 
@@ -211,8 +219,11 @@ void testMotorDirection()
 
     if (CurrentPositionLeft <= -16)
     {
-      motorLeftOne = 4;
-      motorLeftTwo = 2;
+      oldMotorLeftOne = motorLeftOne;
+      oldMotorLeftTwo = motorLeftTwo;
+      motorLeftOne = oldMotorLeftTwo;
+      motorLeftTwo = oldMotorLeftOne;
+      Serial.printf("Left motor direction was wrong, corrected to pin 1=%d, pin 2=%d\r\n", motorLeftOne, motorLeftTwo);
     }
   }
   else
@@ -231,7 +242,6 @@ void testMotorDirection()
     // digitalWrite (motorRightOne, HIGH);
     ledcWrite(M_right_PWM_CHANNEL_two, 128);
 
-
     counter = 0;
     while ((CurrentPositionLeft < 16 && CurrentPositionLeft > -16) && (CurrentPositionRight < 16 && CurrentPositionRight > -16))
     {
@@ -248,9 +258,11 @@ void testMotorDirection()
 
     if (CurrentPositionRight < -16)
     {
-      motorRightOne = 2;
-      motorRightTwo = 4;
-      Serial.printf("Right motor direction was wrong, corrected to pin 1=%d, pin 2=%d", motorRightOne, motorRightTwo);
+      oldMotorRightOne = motorRightOne;
+      oldMotorRightTwo = motorRightTwo;
+      motorRightOne = oldMotorRightTwo;
+      motorRightTwo = oldMotorRightOne;
+      Serial.printf("Right motor direction was wrong, corrected to pin 1=%d, pin 2=%d\r\n", motorRightOne, motorRightTwo);
     }
   }
   
@@ -388,7 +400,6 @@ void moveRobot (uint8_t robotSpeed, uint32_t robotSteps,  int8_t robotDirection)
       targetPositionLeft  =  CurrentPositionLeft - robotSteps;
     }
   }
-
 
   // CommandedPositionRight++;
   // CommandedPositionLeft++;
