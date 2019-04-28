@@ -8,6 +8,7 @@
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
 #include "display.h"
+#include "bluetooth.h"
 
 // Replace with your network credentials
 bool wifiEnabled = true;
@@ -61,7 +62,10 @@ void setup() {
   encoderEnable();
   setupMotor();
   setupSound();
+  // Not enough room for both WiFi and Bluetooth.
+  // Comment/uncomment as required.
   setupWifi();
+  //BTsetup(); // Used with BTloop() code below.
 
   // Setup Ultra sound sensor
   //setupUltrasound(trigPin, echoPin);
@@ -104,6 +108,7 @@ void setup() {
 // 1 --- is red
 // 2 --- is green
 uint8_t ledCounter = 1;
+char bt_input[1] = {'0'};
 
 void buttonIRQhandler (void) {
 
@@ -168,6 +173,17 @@ void loop() {
 
     PCFInterruptFlagOne = false;
   }
+
+  // Check Bluetooth for data. Requires BTsetup().
+  /*
+  if (BTloop(bt_input)) {
+    face_t face_value = (face_t)(bt_input[0] - '0');
+    if (face_value >= 0 && face_value < MAX_FACE) {
+      display_update_face((face_t)face_value);
+    }
+  }
+  */
+
   /*
     if (PCFInterruptFlagOne) {
 
