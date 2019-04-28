@@ -108,18 +108,35 @@ boolean tooClose(uint16_t range){
     return true;
   }else{
     return false;  
-  }
-  
+  } 
 }
 
+boolean toneOn = true;
+
 void loop() {
-  Serial.println(expanderTwo.read(2));
+
+  checkMotorFault();
+  motionHandler();
+  
+  Serial.println(expanderOne.read(2));
   range = getMeasurement();
   Serial.println(range);
   displayRange(range);
-  //tone (50, range);
+  if(expanderOne.read(2)==0){
+    toneOn = false;
+  }
+
+  if(expanderOne.read(3)==0){
+    toneOn = true;
+  }
+  
+  if(toneOn){
+    tone (500, range);
+  }
   if(tooClose(range)){
     displayString("Too Close");  
-  }
+  }else{
+    moveRobot(2, 40, 1);
+   }
   
 }
