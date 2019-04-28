@@ -63,11 +63,11 @@ void setup() {
 
   encoderEnable ();
   setupMotor();
-  setupSound ();
-  setupWifi();
+//  setupSound ();
+//  setupWifi();
 
   // Setup Ultra sound sensor
-  //setupUltrasound(trigPin, echoPin);
+  setupUltrasound(trigPin, echoPin);
 
 
   /*
@@ -117,8 +117,12 @@ void loop() {
   checkMotorFault ();
   motionHandler ();
 
-  //loopUltrasound(trigPin, echoPin);
+  // Prints the distance on the Serial Monitor
+//  Serial.print("Distance: ");
+//  Serial.println(loopUltrasound(trigPin, echoPin));
   // loop () of Ultra sound sensor
+  loopUltrasound(trigPin, echoPin);
+  
   //  ledCounter ++;
   //  if (ledCounter > 3) ledCounter = 1;
 
