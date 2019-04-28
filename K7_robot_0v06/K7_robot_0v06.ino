@@ -13,7 +13,7 @@
 // Replace with your network credentials
 bool wifiEnabled = true;
 bool apMode = true;
-char* ssid     = "ESP32-Max-2";
+char* ssid     = "ESP32-Max";
 char* password = "123456789";
 
 PCF857x expanderTwo(0x20, &Wire);
@@ -62,10 +62,14 @@ void setup() {
   encoderEnable();
   setupMotor();
   setupSound();
+
   // Not enough room for both WiFi and Bluetooth.
   // Comment/uncomment as required.
-  setupWifi();
+  if (wifiEnabled)
+    setupWifi();
+    
   //BTsetup(); // Used with BTloop() code below.
+
 
   // Setup Ultra sound sensor
   //setupUltrasound(trigPin, echoPin);
@@ -98,8 +102,7 @@ void setup() {
 
     led (i % 3, false);
   }
-  if (tetrisMusic == true)
-    playTetris();
+  if (tetrisMusic) playTetris();
 
   //. backLight (false);
 

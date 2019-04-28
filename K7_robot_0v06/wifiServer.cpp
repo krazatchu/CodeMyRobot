@@ -54,8 +54,17 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
     client->text("Hello from ESP32 Server");
  
   } else if(type == WS_EVT_DATA){
+    String dataReceived;
     Serial.println("Data received");
-    //Serial.println(data);
+    
+    for(int i=0; i < len; i++) {
+          dataReceived += (char) data[i];
+    }
+    Serial.println(dataReceived);
+
+    if (dataReceived == "hello") {
+      client->text("Hello from ESP32 Server");
+    }
   
   } else if(type == WS_EVT_DISCONNECT){
     Serial.println("Client disconnected");
@@ -98,28 +107,33 @@ void setupWifi() {
       request->send(SPIFFS, "/style.css", "text/css");
     });
   
-    // Route to set GPIO to HIGH
+    // Go forward
     server.on("/up", HTTP_GET, [](AsyncWebServerRequest *request){    
       moveRobot(5, 40, 1);
       request->send(SPIFFS, "/index.html", String(), false, processor);
     });
     
-    // Route to set GPIO to LOW
+    // Turn left
     server.on("/left", HTTP_GET, [](AsyncWebServerRequest *request){
       turnRobot(3, 40, -1);
       request->send(SPIFFS, "/index.html", String(), false, processor);
     });
 
-    // Route to set GPIO to LOW
+    // Turn right
     server.on("/right", HTTP_GET, [](AsyncWebServerRequest *request){
       turnRobot(3, 40, 1);
       request->send(SPIFFS, "/index.html", String(), false, processor);
     });
 
-    // Route to set GPIO to LOW
+    // Go backward
     server.on("/down", HTTP_GET, [](AsyncWebServerRequest *request){
       moveRobot(5, 40, -1);
       request->send(SPIFFS, "/index.html", String(), false, processor);
+    });
+
+    // WebSocket test page
+    server.on("/test", HTTP_GET, [](AsyncWebServerRequest *request){
+      request->send(SPIFFS, "/test.html", String(), false, processor);
     });
   
     // Start server
