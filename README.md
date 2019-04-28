@@ -23,12 +23,14 @@ You will need Library and tool files copied to your Arduino IDE library and tool
 Copy the folders inside library and tool to the following folders. 
 
 On Windows the default folder is: 
-- C:\Users\<username>\Documents\Arduino\libraries
-- C:\Users\<username>\Documents\Arduino\tools
+- C:\Users\yourUsername\Documents\Arduino\libraries
+- C:\Users\yourUsername\Documents\Arduino\tools
 
 On Mac and Linux the default folder is:
-- /home/<username>/Arduino/libraries
-- /home/<username>/Arduino/tools
+- /home/yourUsername/Arduino/libraries
+- /home/yourUsername/Arduino/tools
+
+You will also need to unzip the Adafruit-GFX-Library-master.zip file and add this folder to your Arduino/libraries folder if that folder is not already there.
 
 If you find your project will not compile and the error is returning a missing library file check and make sure your libraries are in the correct place. 
 
