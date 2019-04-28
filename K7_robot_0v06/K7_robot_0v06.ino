@@ -39,6 +39,7 @@ void checkMotorFault (void ) {
 
 void setup() {
   Serial.begin(115200);
+  delay (1000);
   Serial.println("K7 ROBOT STARTING");
 
   Wire.begin(21, 22);
@@ -63,7 +64,7 @@ void setup() {
   display.fillCircle(60, 30, 10, BLACK);
   display.display();
   encoderEnable ();
-  // setupMotor();
+  setupMotor();
   setupSound ();
 
 
@@ -89,7 +90,7 @@ void setup() {
   backLight (true);
   for (int i = 200; i < 1000; i += 100) {
     led (i % 3, true);
-    tone (i, 50);
+    //tone (i, 50);
     led (i % 3, false);
   }
   //. backLight (false);
@@ -102,22 +103,30 @@ uint8_t ledCounter = 1;
 
 void loop() {
 
- //handleInt ();
+  //handleInt ();
   checkMotorFault ();
+  motionHandler ();
+  // CommandedPositionRight++;
+  // CommandedPositionLeft++;
+  // delay (50);
 
-  //CommandedPositionRight++;
-  //CommandedPositionLeft++;
+  // led (ledCounter, true);
+  // tone (ledCounter*500, 50);
+  // delay (500);
+  // led (ledCounter, false);
 
- 
-  led (ledCounter, true);
-  tone (ledCounter*500, 50);
-  delay (500);
-  led (ledCounter, false);
-  
-  ledCounter ++;
-  if (ledCounter > 3) ledCounter = 1;
-  
-  
+  //  ledCounter ++;
+  //  if (ledCounter > 3) ledCounter = 1;
+
+  if (PCFInterruptFlagOne) {
+
+    Serial.println("Got a button!");
+    if (  expanderOne.read(3) )  { // 3 is button right
+     moveRobot (5, 160, 1);
+     //turnRobot (3, 40, 1);
+    }
+    PCFInterruptFlagOne = false;
+  }
   /*
     if (PCFInterruptFlagOne) {
 

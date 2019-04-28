@@ -5,10 +5,10 @@
 #define encoderLeftB  5
 
 
-#define motorRightOne 23
-#define motorRightTwo 19
-#define motorLeftOne 2  
-#define motorLeftTwo 4 
+//#define motorRightOne 2
+//#define motorRightTwo 4
+//#define motorLeftOne 23 
+//#define motorLeftTwo 19
 
 #define spkr 25
 
