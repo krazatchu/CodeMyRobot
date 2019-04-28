@@ -32,7 +32,7 @@ void display_int(int integer, uint8_t x, uint8_t y, uint8_t size) {
 void display_smiling_face(void) {
   display.clearDisplay();
   display.setRotation(0);
-  delay(100);
+
   display.fillCircle(24, 30, 8, BLACK);
   display.fillCircle(60, 30, 8, BLACK);
 
@@ -40,6 +40,116 @@ void display_smiling_face(void) {
   display.setTextSize(2);
   display.setRotation(1);
   display.print(")");
+  display.display();
+}
+
+void display_heart_eyes(void) {
+  display.clearDisplay();
+  display.setRotation(2);
+  
+//left eye
+  display.fillCircle(21, 10, 5, BLACK);
+  display.fillCircle(29, 10, 5, BLACK);
+  display.fillTriangle(15, 10, 35, 10, 25, 19, BLACK);
+
+//right eye
+  display.fillCircle(51, 10, 5, BLACK);
+  display.fillCircle(59, 10, 5, BLACK);
+  display.fillTriangle(45, 10, 65, 10, 55, 19, BLACK);
+
+//mouth
+  display.fillCircle(40, 30, 5, BLACK);
+  display.fillCircle(40, 28, 5, WHITE);
+  display.display();
+}
+
+void display_the_stare(void) {
+  display.clearDisplay();
+  display.setRotation(2);
+
+
+ //left eye
+   display.fillRect(15, 7, 20, 2, BLACK);
+   display.fillCircle(21, 10, 2, BLACK);
+   display.fillRect(15, 12, 20, 2, BLACK);
+
+//right eye
+   display.fillRect(45, 7, 20, 2, BLACK);
+   display.fillCircle(51, 10, 2, BLACK);
+   display.fillRect(45, 12, 20, 2, BLACK);
+
+//mouth
+  display.fillCircle(40, 33, 10, BLACK);
+  display.fillCircle(40, 35, 10, WHITE);
+
+  display.display();
+}
+
+void display_bigger_smile(void) {
+  display.clearDisplay();
+  display.setRotation(0);
+
+//left eye
+  display.fillCircle(60, 30, 12, BLACK);
+
+//right eye
+  display.fillCircle(24, 30, 12, BLACK);
+
+//mouth
+  display.fillCircle(40, 10, 5, BLACK);
+  display.fillCircle(40, 15, 5, WHITE);
+  display.display();
+}
+
+void display_meh(void) {
+  display.clearDisplay();
+  display.setRotation(0);
+
+
+//left eye
+  display.fillCircle(60, 30, 12, BLACK);
+
+//right eye
+  display.fillCircle(24, 30, 12, BLACK);
+
+//mouth
+  display.fillRect(20, 5, 35, 5, BLACK);
+
+  display.display();
+}
+
+void display_surprised(void){
+  display.clearDisplay();
+  display.setRotation(0);
+
+//left eye
+  display.fillCircle(60, 30, 12, BLACK);
+
+//right eye
+  display.fillCircle(24, 30, 12, BLACK);
+
+//mouth
+  display.fillCircle(40, 10, 5, BLACK);
+
+
+  display.display();
+}
+
+void display_surprised_eyes_open(void){
+  display.clearDisplay();
+  display.setRotation(0);
+
+//left eye
+  display.fillCircle(60, 30, 12, BLACK);
+  display.fillCircle(60, 30, 8, WHITE);
+
+//right eye
+  display.fillCircle(24, 30, 12, BLACK);
+  display.fillCircle(24, 30, 8, WHITE);
+
+//mouth
+  display.fillCircle(40, 10, 5, BLACK);
+
   display.display();
 }
 
