@@ -7,7 +7,7 @@ The following instructions will get you a copy of the project up and running on 
 
 ## Prerequisites
 
-You will need a computer with a USB port. 
+You will need a computer with a USB port, and a Carl 7 Robot. 
 
 ### Install the Arduino IDE
 https://www.arduino.cc/en/Main/Software
