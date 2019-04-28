@@ -4,6 +4,58 @@
 
 extern Adafruit_PCD8544 display;
 
+// Globals for display management.
+uint32_t previous_blink_ms = 0;
+uint32_t blink_again = 1500; // Time between blinks.
+uint32_t blink_length = 300; // Time for blink.
+face_t face_state = SMILE;
+
+// Change/update the face.
+void display_update_face(face_t new_face_state, bool force) {
+  if (!force && face_state == new_face_state) {
+    return;
+  }
+
+  face_state = new_face_state;
+
+  switch(face_state) {
+    case SMILE               : display_smiling_face(); break;
+    case BIG_SMILE           : display_bigger_smile(); break;
+    case HEART_EYES          : display_heart_eyes(); break;
+    case THE_STARE           : display_the_stare(); break;
+    case MEH                 : display_meh(); break;
+    case SURPRISED           : display_surprised(); break;
+    case SURPRISED_EYES_OPEN : display_surprised_eyes_open(); break;
+    case ANGRY               : display_angry(); break;
+    case SAD                 : display_sad(); break;
+    case BLINK               : display_eyeblink(); break;
+  }
+}
+
+// Get the current face.
+face_t display_get_face(void) {
+    return face_state;
+}
+
+// Manage the face and eyes blinking. Needs to be called from loop().
+void display_manage_face(void) {
+  // Manage the time of the blink.
+  if (face_state == SMILE) {
+    if (millis() - previous_blink_ms >= blink_again) {
+      // Time to blink again!
+      display_update_face(BLINK);
+      previous_blink_ms = millis();
+    }
+  }
+  else if (face_state == BLINK) {
+    if (millis() - previous_blink_ms >= blink_length) {
+      // Time to smile.
+      display_update_face(SMILE);
+      previous_blink_ms = millis();
+    }
+  }
+}
+
 /* Initialize the display. */
 void display_init(uint8_t contrast) {
   display.begin(contrast);
@@ -46,7 +98,7 @@ void display_smiling_face(void) {
 void display_heart_eyes(void) {
   display.clearDisplay();
   display.setRotation(2);
-  
+
 //left eye
   display.fillCircle(21, 10, 5, BLACK);
   display.fillCircle(29, 10, 5, BLACK);
@@ -154,13 +206,15 @@ void display_surprised_eyes_open(void){
 }
 
 void display_angry(void) {
-  
+  display.clearDisplay();
+  display.setRotation(2);
+
  //left eyebrow
    display.drawLine(20, 2, 30, 7, BLACK);
    display.drawLine(21, 2, 31, 7, BLACK);
    display.drawLine(22, 2, 32, 7, BLACK);
 
- //left eye   
+ //left eye
    display.fillCircle(21, 10, 5, BLACK);
 
 
@@ -180,13 +234,15 @@ void display_angry(void) {
 }
 
 void display_sad(void) {
-  
+  display.clearDisplay();
+  display.setRotation(2);
+
  //left eyebrow
    display.drawLine(18, 2, 8, 10, BLACK);
    display.drawLine(19, 2, 9, 10, BLACK);
    display.drawLine(20, 2, 10, 10, BLACK);
 
- //left eye   
+ //left eye
    display.fillCircle(21, 10, 5, BLACK);
 
 //right eyebrow
@@ -222,8 +278,5 @@ void display_eyeblink(void) {
   display.setRotation(1);
   display.print(")");
   display.display();
-
-  delay(500);
-
-  display_smiling_face();
 }
+
