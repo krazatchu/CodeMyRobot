@@ -4,18 +4,11 @@
 void handleInt(void);
 void encoderEnable(void);
 
-
 void setupMotor(void);
-void goForward(void) ;
-void goSpin(void);
-void goStop(void);
-void goBackward(void);
-
-
 void setupSound(void);
 void setupWifi(void);
-void tone(float, float);
 
+void tone(float, float);
 
 void backLight(bool);
 void led(uint8_t, bool);
@@ -31,5 +24,5 @@ void turnRobot (uint8_t , int16_t , int8_t  );
 void enableIR();
 void controlIRReceive();
 
-#endif
 void playTetris(void);
+#endif

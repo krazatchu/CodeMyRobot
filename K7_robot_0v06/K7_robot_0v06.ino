@@ -67,7 +67,7 @@ void setup() {
   setupWifi();
 
   // Setup Ultra sound sensor
-  setupUltrasound(trigPin, echoPin);
+  //setupUltrasound(trigPin, echoPin);
 
 
   /*
@@ -91,14 +91,14 @@ void setup() {
   backLight (true);
   for (int i = 200; i < 1000; i += 100) {
     led (i % 3, true);
-        
+
     if (startupSound == true)
-        tone(i, 50);
+      tone(i, 50);
 
     led (i % 3, false);
   }
-    if (tetrisMusic == true)
-      playTetris();
+  if (tetrisMusic == true)
+    playTetris();
 
   //. backLight (false);
 
@@ -122,7 +122,7 @@ void loop() {
   // delay (500);
   // led (ledCounter, false);
 
-  loopUltrasound(trigPin, echoPin);
+  //loopUltrasound(trigPin, echoPin);
   // loop () of Ultra sound sensor
   //  ledCounter ++;
   //  if (ledCounter > 3) ledCounter = 1;
@@ -131,8 +131,8 @@ void loop() {
 
     Serial.println("Got a button!");
     if (  expanderOne.read(3) )  { // 3 is button right
-     moveRobot (5, 160, 1);
-     //turnRobot (3, 40, 1);
+      moveRobot (5, 160, 1);
+      //turnRobot (3, 40, 1);
     }
     PCFInterruptFlagOne = false;
   }

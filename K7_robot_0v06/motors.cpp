@@ -2,12 +2,12 @@
 #include  "pcf8574_esp.h"
 
 
-#define M_left_PWM_CHANNEL_one   1
+#define M_left_PWM_CHANNEL_one   12
 #define M_left_RESOLUTION    8 // 8 bit resolution
-#define M_right_PWM_CHANNEL_one  2
+#define M_right_PWM_CHANNEL_one  13
 #define M_right_RESOLUTION   8 // 8 bit resolution
-#define M_left_PWM_CHANNEL_two   3
-#define M_right_PWM_CHANNEL_two  4
+#define M_left_PWM_CHANNEL_two   14
+#define M_right_PWM_CHANNEL_two  15
 
 uint8_t motorRightOne = 2;
 uint8_t motorRightTwo = 4;
@@ -32,19 +32,20 @@ extern volatile long lastCurrentPositionLeft;
 volatile long IntegralErrorRight = 0;
 volatile long IntegralErrorLeft  = 0;
 
-volatile int16_t errSwap = 0;
-
 int ProportionalGain = 200; // gains 135 with 8 div
 int IntegralGain = 25;//15;
 int DerivativeGain = 240; //  135
 
-hw_timer_t * timer = NULL;
+long TotalErrorRight;
+long TotalErrorLeft;
+
+hw_timer_t * tMotor = NULL;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 
 
-void IRAM_ATTR onTimer() {
+void IRAM_ATTR onMotorTimer() {
   portENTER_CRITICAL_ISR(&timerMux);
-
+  
   long VelocityRight =  ( lastCurrentPositionRight - CurrentPositionRight ); // most noise sensitive item goes first
   long VelocityLeft  =  ( lastCurrentPositionLeft  - CurrentPositionLeft  ); // most noise sensitive item goes first
 
@@ -68,8 +69,8 @@ void IRAM_ATTR onTimer() {
   long DerivativeErrorRight = ( VelocityRight  *  DerivativeGain );
   long DerivativeErrorLeft  = ( VelocityLeft   *  DerivativeGain );
 
-  long TotalErrorRight = ((ProportionErrorRight + IntegralErrorRight - DerivativeErrorRight) / 8 );// / 256); // + 511; // divide off fractional & offset
-  long TotalErrorLeft  = ((ProportionErrorLeft  + IntegralErrorLeft  - DerivativeErrorLeft)  / 8); // + 511; // divide off fractional & offset
+  TotalErrorRight = ((ProportionErrorRight + IntegralErrorRight - DerivativeErrorRight) / 8 );// / 256); // + 511; // divide off fractional & offset
+  TotalErrorLeft  = ((ProportionErrorLeft  + IntegralErrorLeft  - DerivativeErrorLeft)  / 8); // + 511; // divide off fractional & offset
 
 
   if (TotalErrorRight > 150) TotalErrorRight = 150; // clip
@@ -77,59 +78,47 @@ void IRAM_ATTR onTimer() {
   if (TotalErrorRight < -150) TotalErrorRight = -150; // clip
   if (TotalErrorLeft  < -150) TotalErrorLeft  = -150;
 
-
+  /*
   if (TotalErrorRight > 0) {
     int16_t errSwapPlus =  255 - TotalErrorRight;
-    ledcWrite(M_right_PWM_CHANNEL_two, 255);
-    ledcWrite(M_right_PWM_CHANNEL_one, errSwapPlus);
+    
+    //ledcWrite(M_right_PWM_CHANNEL_two, 255);
+    //ledcWrite(M_right_PWM_CHANNEL_one, errSwapPlus);
 
   } else if  (TotalErrorRight < 0) {
     errSwap = 255 -  (TotalErrorRight * -1);
-    ledcWrite(M_right_PWM_CHANNEL_two, errSwap);
-    ledcWrite(M_right_PWM_CHANNEL_one, 255);
-
+    //ledcWrite(M_right_PWM_CHANNEL_two, errSwap);
+    //ledcWrite(M_right_PWM_CHANNEL_one, 255);
   }
 
   if (TotalErrorLeft > 0) {
     int16_t errSwapPlus =  255 - TotalErrorLeft;
-    ledcWrite(M_left_PWM_CHANNEL_two, 255);
-    ledcWrite(M_left_PWM_CHANNEL_one, errSwapPlus);
+    //ledcWrite(M_left_PWM_CHANNEL_two, 255);
+    //ledcWrite(M_left_PWM_CHANNEL_one, errSwapPlus);
 
   } else if  (TotalErrorLeft < 0) {
     errSwap = 255 -  (TotalErrorLeft * -1);
-    ledcWrite(M_left_PWM_CHANNEL_two, errSwap);
-    ledcWrite(M_left_PWM_CHANNEL_one, 255);
-
+    //ledcWrite(M_left_PWM_CHANNEL_two, errSwap);
+    //ledcWrite(M_left_PWM_CHANNEL_one, 255);
   }
-
-
-
-  //if ((TotalErrorRight < 1) && (TotalErrorRight > -1)) {
-  //  ledcWrite(M_right_PWM_CHANNEL_one, 0);
-  //  ledcWrite(M_right_PWM_CHANNEL_two, 0);
-  //}
-
-
-
+  */
   portEXIT_CRITICAL_ISR(&timerMux);
 
 }
 
-
-
 void pwm_setup()
 {
-  ledcSetup(M_left_PWM_CHANNEL_one, 20000, M_left_RESOLUTION);  // Set up PWM channel
+  ledcSetup(M_left_PWM_CHANNEL_one, 10000, M_left_RESOLUTION);  // Set up PWM channel
   ledcAttachPin(motorLeftOne, M_left_PWM_CHANNEL_one);          // Attach channel to pin
-  ledcSetup(M_right_PWM_CHANNEL_one, 20000, M_right_RESOLUTION);  // Set up PWM channel
+  ledcSetup(M_right_PWM_CHANNEL_one, 10000, M_right_RESOLUTION);  // Set up PWM channel
   ledcAttachPin(motorRightOne, M_right_PWM_CHANNEL_one);          // Attach channel to pin
 
   ledcWrite(M_left_PWM_CHANNEL_one, 0); // set PWM to off
   ledcWrite(M_right_PWM_CHANNEL_one, 0);
 
-  ledcSetup(M_left_PWM_CHANNEL_two, 20000, M_left_RESOLUTION);  // Set up PWM channel
+  ledcSetup(M_left_PWM_CHANNEL_two, 10000, M_left_RESOLUTION);  // Set up PWM channel
   ledcAttachPin(motorLeftTwo, M_left_PWM_CHANNEL_two);          // Attach channel to pin
-  ledcSetup(M_right_PWM_CHANNEL_two, 20000, M_right_RESOLUTION);  // Set up PWM channel
+  ledcSetup(M_right_PWM_CHANNEL_two, 10000, M_right_RESOLUTION);  // Set up PWM channel
   ledcAttachPin(motorRightTwo, M_right_PWM_CHANNEL_two);          // Attach channel to pin
 
   ledcWrite(M_left_PWM_CHANNEL_two, 0); // set PWM to off
@@ -292,29 +281,12 @@ void setupMotor (void) {
 
   testMotorDirection();
 
+  pwm_setup();
 
-
-  ledcSetup(M_left_PWM_CHANNEL_one, 20000, M_left_RESOLUTION);  // Set up PWM channel
-  ledcAttachPin(motorLeftOne, M_left_PWM_CHANNEL_one);          // Attach channel to pin
-  ledcSetup(M_right_PWM_CHANNEL_one, 20000, M_right_RESOLUTION);  // Set up PWM channel
-  ledcAttachPin(motorRightOne, M_right_PWM_CHANNEL_one);          // Attach channel to pin
-
-  ledcWrite(M_left_PWM_CHANNEL_one, 0); // set PWM to off
-  ledcWrite(M_right_PWM_CHANNEL_one, 0);
-
-  ledcSetup(M_left_PWM_CHANNEL_two, 20000, M_left_RESOLUTION);  // Set up PWM channel
-  ledcAttachPin(motorLeftTwo, M_left_PWM_CHANNEL_two);          // Attach channel to pin
-  ledcSetup(M_right_PWM_CHANNEL_two, 20000, M_right_RESOLUTION);  // Set up PWM channel
-  ledcAttachPin(motorRightTwo, M_right_PWM_CHANNEL_two);          // Attach channel to pin
-
-  ledcWrite(M_left_PWM_CHANNEL_two, 0); // set PWM to off
-  ledcWrite(M_right_PWM_CHANNEL_two, 0);
-
-
-  timer = timerBegin(0, 80, true); // 1 uS rate after prescaler of 80
-  timerAttachInterrupt(timer, &onTimer, true);
-  timerAlarmWrite(timer, 10000, true);  // 500  // 500 Hz = 2000 uS
-  timerAlarmEnable(timer);
+  tMotor = timerBegin(3, 80, true); // 1 uS rate after prescaler of 80
+  timerAttachInterrupt(tMotor, &onMotorTimer, true);
+  timerAlarmWrite(tMotor, 10000, true);  // 500  // 500 Hz = 2000 uS
+  timerAlarmEnable(tMotor);
   //digitalWrite (motorLeftTwo, LOW);
   //digitalWrite (motorRightTwo, LOW);
 }
@@ -330,7 +302,9 @@ void motionHandler (void) {
   //static uint32_t cnt = 0;
 
   static unsigned long currentMillis = 0;
-
+  int16_t errSwapPlus;
+  int16_t errSwap;
+    
   if (turnt != 0) {
 
     currentMillis = millis();
@@ -351,14 +325,10 @@ void motionHandler (void) {
         CommandedPositionLeft  = targetPositionLeft;
       }
     }
-
-
   }
 
-
-
   if ( velocity != 0) {
-
+    
     currentMillis = millis();
     if (currentMillis - previousMillis >= 10 ) {
       previousMillis = currentMillis;
@@ -377,8 +347,29 @@ void motionHandler (void) {
         CommandedPositionLeft  = targetPositionLeft;
       }
     }
-    //Serial.println (cnt);
-    //cnt++;
+  }  
+    
+  if (TotalErrorRight > 0) {
+    errSwapPlus =  255 - TotalErrorRight;
+    
+    ledcWrite(M_right_PWM_CHANNEL_two, 255);
+    ledcWrite(M_right_PWM_CHANNEL_one, errSwapPlus);
+
+  } else if  (TotalErrorRight < 0) {
+    errSwap = 255 -  (TotalErrorRight * -1);
+    ledcWrite(M_right_PWM_CHANNEL_two, errSwap);
+    ledcWrite(M_right_PWM_CHANNEL_one, 255);
+  }
+
+  if (TotalErrorLeft > 0) {
+    errSwapPlus =  255 - TotalErrorLeft;
+    ledcWrite(M_left_PWM_CHANNEL_two, 255);
+    ledcWrite(M_left_PWM_CHANNEL_one, errSwapPlus);
+
+  } else if  (TotalErrorLeft < 0) {
+    errSwap = 255 -  (TotalErrorLeft * -1);
+    ledcWrite(M_left_PWM_CHANNEL_two, errSwap);
+    ledcWrite(M_left_PWM_CHANNEL_one, 255);
   }
 
 }
@@ -396,7 +387,6 @@ void moveRobot (uint8_t robotSpeed, uint32_t robotSteps,  int8_t robotDirection)
       targetPositionRight = CurrentPositionRight - robotSteps;
       targetPositionLeft  =  CurrentPositionLeft - robotSteps;
     }
-
   }
 
 

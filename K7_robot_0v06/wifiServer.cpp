@@ -7,9 +7,10 @@
 #include <WiFi.h>
 #include "ESPAsyncWebServer.h"
 #include "SPIFFS.h"
+#include "prototypes.h"
 
 // Replace with your network credentials
-const char* ssid     = "ESP32-Access-Point";
+const char* ssid     = "ESP32-ouch";
 const char* password = "123456789";
 
 // Variable to store the HTTP request
@@ -19,12 +20,8 @@ String header;
 String output26State = "off";
 String output27State = "off";
 
-// Assign output variables to GPIO pins
-const int output26 = 2;
-const int output27 = 4;
-
 // Set LED GPIO
-const int ledPin = 2;
+const int ledPin = 33;
 // Stores LED state
 String ledState;
 
@@ -48,13 +45,6 @@ String processor(const String& var){
 }
 
 void setupWifi() {
-  // Initialize the output variables as outputs
-  pinMode(output26, OUTPUT);
-  pinMode(output27, OUTPUT);
-  // Set outputs to LOW
-  digitalWrite(output26, LOW);
-  digitalWrite(output27, LOW);
-
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Setting AP (Access Point)…");
   // Remove the password parameter, if you want the AP (Access Point) to be open
@@ -63,8 +53,6 @@ void setupWifi() {
   IPAddress IP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(IP);
-
-  pinMode(ledPin, OUTPUT);
 
   // Initialize SPIFFS
   if(!SPIFFS.begin(true)){
@@ -86,14 +74,14 @@ void setupWifi() {
   });
 
   // Route to set GPIO to HIGH
-  server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request){
-    digitalWrite(ledPin, HIGH);    
+  server.on("/on", HTTP_GET, [](AsyncWebServerRequest *request){    
+    moveRobot(5, 160, 1);
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
   
   // Route to set GPIO to LOW
   server.on("/off", HTTP_GET, [](AsyncWebServerRequest *request){
-    digitalWrite(ledPin, LOW);    
+    turnRobot(3, 40, 1);
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
 
