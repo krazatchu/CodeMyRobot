@@ -59,7 +59,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(35), PCFInterruptOne, FALLING);
 
   display_init(60);
-  display_smiling_face();
+  display_update_face(SMILE, true);
 
   encoderEnable ();
   setupMotor();
@@ -109,10 +109,14 @@ void setup() {
 uint8_t ledCounter = 1;
 
 void loop() {
+  // Display management.
+  // Use display_update_face() to set a new face.
+  display_manage_face();
 
   //handleInt ();
   checkMotorFault ();
-  motionHandler ();
+  //motionHandler ();
+
   // CommandedPositionRight++;
   // CommandedPositionLeft++;
   // delay (50);
@@ -134,6 +138,13 @@ void loop() {
       moveRobot (5, 160, 1);
       //turnRobot (3, 40, 1);
     }
+
+    // Left button.
+    if (expanderOne.read(2)) {
+      // Cycle through the faces.
+      display_update_face((face_t)((display_get_face() + 1) % MAX_FACE));
+    }
+
     PCFInterruptFlagOne = false;
   }
   /*
