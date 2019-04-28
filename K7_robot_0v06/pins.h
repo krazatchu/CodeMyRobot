@@ -23,4 +23,6 @@
 #define trigPin 15
 #define echoPin 27
 
+#define irReceivePin 33
+
 #endif

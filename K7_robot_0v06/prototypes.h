@@ -27,5 +27,9 @@ void motionHandler (void);
 void moveRobot (uint8_t , uint32_t ,  int8_t );
 void turnRobot (uint8_t , int16_t , int8_t  );
 
+//IR Receiver
+void enableIR();
+void controlIRReceive();
+
 #endif
 void playTetris(void);
