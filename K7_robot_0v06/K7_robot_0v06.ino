@@ -58,7 +58,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(35), PCFInterruptOne, FALLING);
 
   display_init(60);
-  display_smiling_face();
+  display_bigger_smile();
 
   encoderEnable ();
 //   setupMotor();
