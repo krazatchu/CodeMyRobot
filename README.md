@@ -23,12 +23,12 @@ You will need Library and tool files copied to your Arduino IDE library and tool
 Copy the folders inside library and tool to the following folders. 
 
 On Windows the default folder is: 
-C:\Users\<username>\Documents\Arduino\libraries
-C:\Users\<username>\Documents\Arduino\tools
+- C:\Users\<username>\Documents\Arduino\libraries
+- C:\Users\<username>\Documents\Arduino\tools
 
 On Mac and Linux the default folder is:
-/home/<username>/Arduino/libraries
-/home/<username>/Arduino/tools
+- /home/<username>/Arduino/libraries
+- /home/<username>/Arduino/tools
 
 If you find your project will not compile and the error is returning a missing library file check and make sure your libraries are in the correct place. 
 
