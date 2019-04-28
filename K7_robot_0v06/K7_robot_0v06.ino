@@ -30,15 +30,7 @@ void ICACHE_RAM_ATTR PCFInterruptOne() {
   PCFInterruptFlagOne = true;
 }
 
-void checkMotorFault (void ) {
 
-  if (PCFInterruptFlagOne == true) {
-    PCFInterruptFlagOne = false;
-    bool fault = expanderOne.read(7);
-    if (!fault)  Serial.println("mot fault");
-  }
-
-}
 
 void setup() {
   Serial.begin(115200);
@@ -108,13 +100,46 @@ void setup() {
 // 2 --- is green
 uint8_t ledCounter = 1;
 
+void buttonIRQhandler (void) {
+
+  if ( PCFInterruptFlagOne == true) {
+    PCFInterruptFlagOne = false;
+
+    uint8_t readAll = expanderOne.read8();
+    bool buttonOneFlag  = ~ readAll & (1 << 2);
+    bool buttonTwoFlag  = ~ readAll & (1 << 3);
+    bool tofIrqFlag     = ~ readAll & (1 << 5);
+    bool motorFaultFlag = ~ readAll & (1 << 7);
+
+    // customize the code following here:
+    if (buttonOneFlag) {
+      buttonOneFlag = false;
+      Serial.println("B1 Left");
+    }
+    if (buttonTwoFlag) {
+      buttonTwoFlag = false;
+      Serial.println("B2 Right");
+    }
+
+    if (tofIrqFlag) {
+      tofIrqFlag = false;
+      Serial.println("TOF irq");
+    }
+
+    if (motorFaultFlag) {
+      motorFaultFlag = false;
+      Serial.println("Motor Fault");
+    }
+  }
+}
+
 void loop() {
   // Display management.
   // Use display_update_face() to set a new face.
   display_manage_face();
 
-  //handleInt ();
-  checkMotorFault ();
+  buttonIRQhandler ();
+
   motionHandler ();
 
   //loopUltrasound(trigPin, echoPin);
@@ -126,7 +151,7 @@ void loop() {
 
     Serial.println("Got a button!");
     if (  expanderOne.read(3) )  { // 3 is button right
-      moveRobot (5, 160, 1);
+      moveRobot (5, 40, 1);
       //turnRobot (3, 40, 1);
     }
 

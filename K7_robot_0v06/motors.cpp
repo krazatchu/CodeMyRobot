@@ -9,10 +9,10 @@
 #define M_left_PWM_CHANNEL_two   14
 #define M_right_PWM_CHANNEL_two  15
 
-uint8_t motorRightOne = 19;
-uint8_t motorRightTwo = 23;
-uint8_t motorLeftOne = 4;
-uint8_t motorLeftTwo = 2;
+uint8_t motorRightOne = 2;
+uint8_t motorRightTwo = 4;
+uint8_t motorLeftOne = 23;
+uint8_t motorLeftTwo = 19;
 /*
 uint8_t motorRightOne = 2;
 uint8_t motorRightTwo = 4;
@@ -386,6 +386,10 @@ void motionHandler (void) {
 
 }
 
+// Moves robot forward or backwards
+// \param robotSpeed integer range [1-25]
+// \param robotSteps 80 steps is one wheel revolution, wheels move same direction
+// \param robotDirection 1 for forward, -1 for backwards
 void moveRobot (uint8_t robotSpeed, uint32_t robotSteps,  int8_t robotDirection) {
 
   if ( (robotSpeed > 0) &&  (robotDirection != 0) && (robotSteps > 0) ) {
@@ -406,6 +410,10 @@ void moveRobot (uint8_t robotSpeed, uint32_t robotSteps,  int8_t robotDirection)
 
 }
 
+// Turns robot left or right
+// \param robotSpeed integer range [1-25]
+// \param robotSteps 80 steps is one wheel revolution, wheels move opposite direction
+// \param robotDirection 1 for right, -1 for left
 void turnRobot (uint8_t robotSpeed, int16_t robotSteps, int8_t robotDirection ) {
   if ( (robotSpeed > 0) &&  (robotDirection != 0) && (robotSteps > 0) ) {
 
