@@ -1,9 +1,13 @@
 #ifndef _BLUETOOTH_H
 #define _BLUETOOTH_H
 
-#include "BluetoothSerial.h" //Header File for Serial Bluetooth, will be added by default into Arduino
+// Header File for Serial Bluetooth, will be added by default into Arduino
+#include "BluetoothSerial.h"
 
-void BTsetup();
-void BTloop();
+// Bluetooth setup.
+void BTsetup(void);
+
+// Bluetooth read character. This goes in the loop().
+bool BTloop(char *value);
 
 #endif
