@@ -1,9 +1,9 @@
+#include "bluetooth.h"
+
 BluetoothSerial ESP_BT; //Object for Bluetooth
 
 int incoming;
 //int LED_BUILTIN = 4;
-
-#include  "bluetooth.h"
 
 void BTsetup() {
   Serial.begin(9600); //Start  Serial monitor in 9600

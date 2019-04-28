@@ -4,4 +4,6 @@
 #include "BluetoothSerial.h" //Header File for Serial Bluetooth, will be added by default into Arduino
 
 void BTsetup();
-void BTloop(); 
+void BTloop();
+
+#endif
