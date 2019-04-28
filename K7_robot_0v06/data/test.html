@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+
+<html>
+   <head>
+      
+      <script type = "text/javascript">
+
+         var ws;
+         
+         function OpenWebSocket() {
+            
+            if ("WebSocket" in window) {
+               console.log("WebSocket is supported by your Browser!");
+               
+               // Let us open a web socket
+               ws = new WebSocket("ws://192.168.4.1/ws");
+				
+               ws.onopen = function() {
+                  
+                  // Web Socket is connected, send data using send()
+                  ws.send("Message to send");
+                  console.log("Message is sent...");
+               };
+				
+               ws.onmessage = function (event) { 
+                  var received_msg = event.data;
+                  console.log("Message is received...");
+                  console.log('Message from server: ', event.data);
+               };
+				
+            } else {
+              
+               // The browser doesn't support WebSocket
+               console.log("WebSocket NOT supported by your Browser!");
+            }
+         }
+
+         function CloseWebSocket() {
+               ws.close();
+               ws.onclose = function() { 
+                  
+                  // websocket is closed.
+                  console.log("Connection is closed..."); 
+               };
+         }
+
+         function SendData() {
+               ws.send(1);
+               console.log('Sent hello!');
+         }
+      </script>
+		
+   </head>
+   
+   <body>
+      <div id = "sse">
+         <a href = "javascript:OpenWebSocket()">Open WebSocket</a><br /><br />
+         <a href = "javascript:SendData()">Send hello</a><br /><br />
+         <a href = "javascript:CloseWebSocket()">Close WebSocket</a>
+      </div>
+      
+   </body>
+</html>

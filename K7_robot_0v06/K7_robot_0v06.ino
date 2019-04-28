@@ -1,7 +1,7 @@
 //  KARL 7 ROBOT
 
-#include  "pins.h"
-#include  "prototypes.h"
+#include "pins.h"
+#include "prototypes.h"
 #include "pcf8574_esp.h"
 #include <Wire.h>
 #include <SPI.h>
@@ -9,6 +9,11 @@
 #include "Adafruit_PCD8544.h"
 #include "display.h"
 
+// Replace with your network credentials
+bool wifiEnabled = true;
+bool apMode = true;
+char* ssid     = "ESP32-Max-2";
+char* password = "123456789";
 
 PCF857x expanderTwo(0x20, &Wire);
 PCF857x expanderOne(0x21, &Wire);
@@ -53,9 +58,9 @@ void setup() {
   display_init(60);
   display_update_face(SMILE, true);
 
-  encoderEnable ();
+  encoderEnable();
   setupMotor();
-  setupSound ();
+  setupSound();
   setupWifi();
 
   // Setup Ultra sound sensor
