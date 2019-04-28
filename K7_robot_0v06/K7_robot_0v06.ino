@@ -7,6 +7,7 @@
 #include <SPI.h>
 #include <Adafruit_GFX.h>
 #include "Adafruit_PCD8544.h"
+#include "display.h"
 
 
 PCF857x expanderTwo(0x20, &Wire);
@@ -16,7 +17,9 @@ Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) 
 extern volatile long CommandedPositionLeft;
 extern volatile long CommandedPositionRight;
 
-
+volatile bool startupSound = true;
+volatile bool loopSound = false;
+volatile bool tetrisMusic = false;
 
 volatile bool PCFInterruptFlagTwo = false;
 void ICACHE_RAM_ATTR PCFInterruptTwo() {
@@ -55,18 +58,16 @@ void setup() {
   expanderOne.resetInterruptPin();
   attachInterrupt(digitalPinToInterrupt(35), PCFInterruptOne, FALLING);
 
-  display.begin();
-  display.setContrast(60);
-  display.clearDisplayRAM();
-  display.clearDisplay();
-  delay (100);
-  display.fillCircle(24, 30, 10, BLACK);
-  display.fillCircle(60, 30, 10, BLACK);
-  display.display();
+  display_init(60);
+  display_smiling_face();
+
   encoderEnable ();
   setupMotor();
   setupSound ();
+  setupWifi();
 
+  // Setup Ultra sound sensor
+  setupUltrasound(trigPin, echoPin);
 
 
   /*
@@ -90,15 +91,21 @@ void setup() {
   backLight (true);
   for (int i = 200; i < 1000; i += 100) {
     led (i % 3, true);
-    //tone (i, 50);
+        
+    if (startupSound == true)
+        tone(i, 50);
+
     led (i % 3, false);
   }
-  //. backLight (false);
+    if (tetrisMusic == true)
+      playTetris();
 
+  //. backLight (false);
 
 }
 
-
+// 1 --- is red
+// 2 --- is green
 uint8_t ledCounter = 1;
 
 void loop() {
@@ -115,6 +122,8 @@ void loop() {
   // delay (500);
   // led (ledCounter, false);
 
+  loopUltrasound(trigPin, echoPin);
+  // loop () of Ultra sound sensor
   //  ledCounter ++;
   //  if (ledCounter > 3) ledCounter = 1;
 
