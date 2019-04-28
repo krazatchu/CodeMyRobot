@@ -65,8 +65,8 @@ void setup() {
   display.clearDisplay();
   encoderEnable ();
 
-  // setupMotor();
-  setupSound ();
+  setupMotor();
+  //setupSound ();
   setupLidar();
 
   backLight (true);
@@ -104,14 +104,14 @@ void displayString(String string){
  * Checks if the range is too close.
  */
 boolean tooClose(uint16_t range){
-  if(range<50){
+  if(range<150){
     return true;
   }else{
     return false;  
   } 
 }
 
-boolean toneOn = true;
+boolean toneOn = false;
 
 void loop() {
 
@@ -131,12 +131,13 @@ void loop() {
   }
   
   if(toneOn){
-    tone (500, range);
+      tone (500, range);
   }
+  
   if(tooClose(range)){
     displayString("Too Close");  
   }else{
-    moveRobot(2, 40, 1);
-   }
-  
+    moveRobot(2,40,1);  
+  }
+
 }
