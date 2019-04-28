@@ -16,6 +16,8 @@ bool apMode = true;
 char* ssid     = "ESP32-Max";
 char* password = "123456789";
 
+bool btEnabled = false;
+
 PCF857x expanderTwo(0x20, &Wire);
 PCF857x expanderOne(0x21, &Wire);
 Adafruit_PCD8544 display = Adafruit_PCD8544(14, 13, 12, -1); // (SCLK) // (DIN) // (D/C) // (RST) on IO EXPANDER
@@ -67,8 +69,9 @@ void setup() {
   // Comment/uncomment as required.
   if (wifiEnabled)
     setupWifi();
-    
-  //BTsetup(); // Used with BTloop() code below.
+
+  if (btEnabled)
+    BTsetup(); // Used with BTloop() code below.
 
 
   // Setup Ultra sound sensor
@@ -102,7 +105,8 @@ void setup() {
 
     led (i % 3, false);
   }
-  if (tetrisMusic) playTetris();
+  if (tetrisMusic)
+    playTetris();
 
   //. backLight (false);
 
