@@ -15,6 +15,7 @@ volatile long CurrentPositionLeft  = 0;
 volatile long lastCurrentPositionLeft  = 0;
 
 
+extern volatile int16_t errSwap; // =0;
 
 portMUX_TYPE mux = portMUX_INITIALIZER_UNLOCKED;
 
@@ -82,7 +83,10 @@ void encoderDisable (void) {
 void handleInt (void) {
   if ( CurrentPositionRight != lastCurrentPositionRight) {
     Serial.print("RIGHT ENC POS: ");
-    Serial.println(CurrentPositionRight);
+    Serial.println (CurrentPositionRight);
+    // Serial.print("RIGHT erro swap : ");
+  
+  // Serial.println(  errSwap);
     //lastCurrentPositionRight = CurrentPositionRight;
 
   }
