@@ -13,6 +13,8 @@ void display_bigger_smile(void);
 void display_meh(void);
 void display_surprised(void);
 void display_surprised_eyes_open(void);
+void display_angry(void);
+void display_sad(void);
 
 
 #endif

@@ -153,6 +153,62 @@ void display_surprised_eyes_open(void){
   display.display();
 }
 
+void display_angry(void) {
+  
+ //left eyebrow
+   display.drawLine(20, 2, 30, 7, BLACK);
+   display.drawLine(21, 2, 31, 7, BLACK);
+   display.drawLine(22, 2, 32, 7, BLACK);
+
+ //left eye   
+   display.fillCircle(21, 10, 5, BLACK);
+
+
+//right eyebrow
+   display.drawLine(52, 2, 37, 8, BLACK);
+   display.drawLine(53, 2, 38, 8, BLACK);
+   display.drawLine(54, 2, 39, 8, BLACK);
+
+//right eye
+   display.fillCircle(51, 10, 5, BLACK);
+
+//mouth
+  display.fillCircle(40, 33, 10, BLACK);
+  display.fillCircle(40, 35, 10, WHITE);
+
+  display.display();
+}
+
+void display_sad(void) {
+  
+ //left eyebrow
+   display.drawLine(18, 2, 8, 10, BLACK);
+   display.drawLine(19, 2, 9, 10, BLACK);
+   display.drawLine(20, 2, 10, 10, BLACK);
+
+ //left eye   
+   display.fillCircle(21, 10, 5, BLACK);
+
+//right eyebrow
+   display.drawLine(46, 1, 60, 6, BLACK);
+   display.drawLine(47, 1, 61, 6, BLACK);
+   display.drawLine(48, 1, 62, 6, BLACK);
+
+//right eye
+   display.fillCircle(51, 10, 5, BLACK);
+
+//tear
+   display.drawLine(52, 22, 54, 18, BLACK);
+   display.drawLine(56, 22, 54, 17, BLACK);
+   display.fillCircle(54, 22, 2, BLACK);
+
+//mouth
+  display.fillCircle(40, 33, 10, BLACK);
+  display.fillCircle(40, 35, 10, WHITE);
+
+  display.display();
+}
+
 /* Eye blinks for 500 ms and then back to default expression. */
 void display_eyeblink(void) {
   display.setRotation(0);
